@@ -26,6 +26,7 @@
 - `scan`: Set to `False` to let restic skip the step of estimating the size of the backup (restic >= 0.15.0)
 - `group_by`: A list of criteria with which to group backups. Each element must be one of ("host", "path", or "tags"). Disable grouping with an empty list
 - `skip_if_unchanged`: Omit the creation of a new snapshot if nothing has changed compared to the parent snapshot
+- `progress_callback`: Optional callback that receives restic output line-by-line as the backup runs. Exceptions raised by the callback are logged and ignored
 
 ### Returns
 
@@ -54,8 +55,16 @@ A dictionary with a summary of the backup result.
   "snapshot_id": "e17049ab"
 }
 ```
+### Example: backup with progress logging
+```python
+def on_progress(line):
+    print(line)
 
----
+restic.backup(
+    paths=["/data/photos"],
+    progress_callback=on_progress,
+)
+```
 
 ## cat.masterkey
 
